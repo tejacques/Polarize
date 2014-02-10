@@ -28,7 +28,6 @@
     <copyright>Copyright 2014</copyright>
     <tags>Json Serialize Filter</tags>
   </metadata>
-  <dependencies>
   <files>
     <file src="..\..\lib\*.*" target="lib\Net40" />
     <file src="..\..\src\Polarize\*.cs" target="src\Polarize" />
