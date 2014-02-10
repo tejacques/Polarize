@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Polarize</id>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <title>Polarize</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -19,7 +19,10 @@
     <releaseNotes>
         Notes:
 
-        Version 0.1.1:
+        Version 0.1.3:
+         - Update Dependency version
+
+        Version 0.1.2:
          - Null check on fields during JsonFilter creation
 
         Version 0.1.1:
@@ -29,7 +32,7 @@
          - Filter Json Serialization to only the specified properties
     </releaseNotes>
     <dependencies>
-        <dependency id="Newtonsoft.Json" />
+        <dependency id="Newtonsoft.Json" version="[6.0.0,)" />
     </dependencies>
     <copyright>Copyright 2014</copyright>
     <tags>Json Serialize Filter</tags>
