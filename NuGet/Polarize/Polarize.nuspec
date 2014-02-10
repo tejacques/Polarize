@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Polarize</id>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <title>Polarize</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,6 +18,9 @@
     </summary>
     <releaseNotes>
         Notes:
+
+        Version 0.1.1:
+         - Add implicit conversion from JsonFilter&lt;T&gt; to T
 
         Version 0.1.0:
          - Filter Json Serialization to only the specified properties
