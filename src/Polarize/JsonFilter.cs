@@ -55,5 +55,10 @@ namespace Polarize
         {
             return JsonFilter.Create(t);
         }
+
+        public static implicit operator T(JsonFilter<T> jsf)
+        {
+            return (T)jsf.Value;
+        }
     }
 }
