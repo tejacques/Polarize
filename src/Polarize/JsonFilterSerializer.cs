@@ -15,12 +15,17 @@ namespace Polarize
             return typeof(JsonFilter).IsAssignableFrom(objectType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
+            JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer, object value, JsonSerializer serializer)
         {
             JsonFilter jsf = (JsonFilter)value;
             if (null == jsf.Fields || jsf.Fields.Length == 0)
