@@ -12,7 +12,7 @@ namespace Polarize.Tests
     public class Tests
     {
         Dictionary<string, Dictionary<string, int>> testDictionary;
-        int loops = 100000;
+        int loops = 50000;
 
         [TestFixtureSetUp]
         public void SetUp()
