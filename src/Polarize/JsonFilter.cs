@@ -23,25 +23,29 @@ namespace Polarize
         {
             Value = value;
 
-            Array.Sort(fields);
-            Fields = fields;
-            FieldSet = new HashSet<string>(fields);
-            FieldPrefixSet = new HashSet<string>(
-                fields.SelectMany(field =>
-                {
-                    var splitFields = field.Split(StringSplits.Period);
-                    string[] fieldPaths = new string[splitFields.Length];
-                    StringBuilder sb = new StringBuilder(splitFields[0]);
-                    fieldPaths[0] = sb.ToString();
-                    for (int i = 1; i < splitFields.Length; i++)
-                    {
-                        sb.Append('.');
-                        sb.Append(splitFields[i]);
-                        fieldPaths[i] = sb.ToString();
-                    }
+            if (null != fields)
+            {
+                Array.Sort(fields);
+                Fields = fields;
 
-                    return fieldPaths;
-                }));
+                FieldSet = new HashSet<string>(fields);
+                FieldPrefixSet = new HashSet<string>(
+                    fields.SelectMany(field =>
+                    {
+                        var splitFields = field.Split(StringSplits.Period);
+                        string[] fieldPaths = new string[splitFields.Length];
+                        StringBuilder sb = new StringBuilder(splitFields[0]);
+                        fieldPaths[0] = sb.ToString();
+                        for (int i = 1; i < splitFields.Length; i++)
+                        {
+                            sb.Append('.');
+                            sb.Append(splitFields[i]);
+                            fieldPaths[i] = sb.ToString();
+                        }
+
+                        return fieldPaths;
+                    }));
+            }
         }
     }
 
