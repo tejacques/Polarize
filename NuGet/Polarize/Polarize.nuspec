@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Polarize</id>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <title>Polarize</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,6 +18,9 @@
     </summary>
     <releaseNotes>
         Notes:
+
+        Version 0.1.1:
+         - Null check on fields during JsonFilter creation
 
         Version 0.1.1:
          - Add implicit conversion from JsonFilter&lt;T&gt; to T
