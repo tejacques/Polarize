@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,11 @@ using System.Text;
 
 namespace Polarize
 {
-    [JsonConverter(typeof(JsonFilterSerializer))]
+    [JsonConverter(typeof(JsonFilterConverter))]
     public class JsonFilter
     {
         public object Value;
+        public readonly JObject JObject;
         public readonly string[] Fields;
         public readonly HashSet<string> FieldPrefixSet;
         public readonly HashSet<string> FieldSet;
@@ -17,6 +19,11 @@ namespace Polarize
         public static JsonFilter<T> Create<T>(T value, params string[] fields)
         {
             return new JsonFilter<T>(value, fields);
+        }
+
+        public static JsonFilter<T> Create<T>(T value, JObject jobject)
+        {
+            return new JsonFilter<T>(value, jobject);
         }
 
         internal JsonFilter(object value, string[] fields)
@@ -47,13 +54,22 @@ namespace Polarize
                     }));
             }
         }
+
+        internal JsonFilter(object value, JObject jobject)
+        {
+            Value = value;
+            JObject = jobject;
+        }
     }
 
-    [JsonConverter(typeof(JsonFilterSerializer))]
+    [JsonConverter(typeof(JsonFilterConverter))]
     public class JsonFilter<T> : JsonFilter
     {
         internal JsonFilter(T value, string[] fields)
             : base(value, fields) {}
+
+        internal JsonFilter(T value, JObject jobject)
+            : base(value, jobject) { }
 
         public static implicit operator JsonFilter<T>(T t)
         {
