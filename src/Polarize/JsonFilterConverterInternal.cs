@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,17 +57,24 @@ namespace Polarize
         {
             var fieldPath = GetContainerPath();
 
-            if (fieldPath.Length == 0)
+            if (fieldPath.Length == 0
+                || _jsonFilter.Fields.Length == 0)
             {
-                // Root level
                 // Serialize this object but continue checking
-                serializer.Serialize(writer, value);
+                var toSerialize = ToSerialize(fieldPath, value);
+                serializer.Serialize(
+                    writer,
+                    toSerialize);
             }
             else if (_jsonFilter.FieldSet.Contains(fieldPath))
             {
                 // Serialize Everything
-                _serializer.Serialize(_writer, value);
-                _fieldStack.RemoveAt(_fieldStack.Count - 1);
+                _serializer.Serialize(
+                    _writer,
+                    ToSerialize(fieldPath, value));
+
+                ((JsonFilterWriter)writer).WriteAllInThisProperty = false;
+                PopFieldStack();
 
                 // Intercept the next call
                 _intercept = true;
@@ -73,35 +82,82 @@ namespace Polarize
             else if (_jsonFilter.FieldPrefixSet.Contains(fieldPath))
             {
                 // Serialize this object but continue checking
-                serializer.Serialize(writer, value);
-                _fieldStack.RemoveAt(_fieldStack.Count - 1);
+                serializer.Serialize(
+                    writer,
+                    ToSerialize(fieldPath, value));
+
+                // The writer will pop for us
+                //PopFieldStack();
             }
             else
             {
                 // Don't Serialize
-                _fieldStack.RemoveAt(_fieldStack.Count - 1);
+                PopFieldStack();
 
                 // Intercept the next call
                 _intercept = true;
             }
         }
 
+        private void PopFieldStack()
+        {
+            // Pop only if we're not in an Array
+            if (WriteState.Array != _writer.WriteState)
+            {
+                _fieldStack.RemoveAt(_fieldStack.Count - 1);
+            }
+        }
+
+        private object ToSerialize(
+            string fieldPath,
+            object value)
+        {
+            JsonConstraint constraint;
+            if (null == _jsonFilter.Constraints
+                || !_jsonFilter
+                .Constraints
+                .TryGetValue(fieldPath, out constraint))
+            {
+                return value;
+            }
+
+            return ToSeriazeInner(value, constraint);
+        }
+
+        private object ToSeriazeInner(object value, JsonConstraint constraint)
+        {
+            var contract = _serializer
+                .ContractResolver
+                .ResolveContract(value.GetType());
+
+            var arrayContract = contract as JsonArrayContract;
+            if (arrayContract == null)
+            {
+                return value;
+            }
+
+            if (arrayContract.IsMultidimensionalArray)
+            {
+                return value;
+            }
+
+            // Remove the constraint so we don't use it in the writer
+            // That's a lie we have to still use it, but it fucks up on
+            // lists of lists
+            //_jsonFilter.Constraints.Remove(fieldPath);
+
+            var constrained = ((IEnumerable)value).Cast<object>()
+                .Skip(constraint.Offset)
+                .Take(constraint.Limit);
+
+            return constrained;
+        }
+
         private string GetContainerPath()
         {
-            //var currentPath = _writer.Path.Substring(_initialPath.Length);
-            //var writeState = _writer.WriteState;
-
-            //bool insideContainer = writeState != WriteState.Property;
-
-            //int n = insideContainer ? 1 : 0;
-
             var fieldPath = string.Join(
                 ".",
                 _fieldStack);
-            //currentPath
-            //    .Split(StringSplits.Period)
-            //    .Where(s => s.Length > 0 && !s.StartsWith("["))
-            //    .ExceptLast(n));
             return fieldPath;
         }
     }

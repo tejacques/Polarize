@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonContraint.cs" />
     <Compile Include="JsonField.cs" />
     <Compile Include="JsonFilter.cs" />
     <Compile Include="JsonFilterConverterInternalFancier.cs" />

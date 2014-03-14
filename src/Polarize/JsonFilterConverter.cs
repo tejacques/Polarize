@@ -16,13 +16,31 @@ namespace Polarize
             return typeof(JsonFilter).IsAssignableFrom(objectType);
         }
 
+        internal class JsonFilterValues
+        {
+            public string[] Fields;
+            public Dictionary<string, JsonConstraint> Constraints;
+
+            public JsonFilterValues()
+            {
+                Fields = null;
+                Constraints = null;
+            }
+        }
+
         public override object ReadJson(
             JsonReader reader,
             Type objectType,
             object existingValue,
             JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var filter = serializer
+                .Deserialize<JsonFilterValues>(reader);
+
+            return new JsonFilter(
+                null,
+                filter.Fields,
+                filter.Constraints);
         }
 
         public override void WriteJson(
@@ -33,13 +51,20 @@ namespace Polarize
             JsonFilter jsf = (JsonFilter)value;
 
             // If there were no restrictions set, then serialize everything
-            if (null == jsf.Fields || jsf.Fields.Length == 0)
+            if ((null == jsf.Fields || jsf.Fields.Length == 0)
+                && (null == jsf.Constraints || 0 == jsf.Constraints.Count))
             {
                 serializer.Serialize(writer, jsf.Value);
                 return;
             }
 
             var fieldStack = new List<string>();
+            var customWriter = new JsonFilterWriter(writer, jsf, fieldStack);
+
+            // Comment / Uncomment these lines to test modifying only the writer
+            //serializer.Serialize(customWriter, jsf.Value);
+            //return;
+
             var customConverter = new JsonFilterConverterInternal(
                 serializer,
                 jsf,
@@ -48,7 +73,7 @@ namespace Polarize
 
             var customSerializer = GetSerializer(
                 writer, serializer, customConverter, jsf, fieldStack);
-            var customWriter = new JsonFilterWriter(writer, jsf, fieldStack);
+            
 
             //customConverter.WriteJson(customWriter, jsf.Value, customSerializer);
             customSerializer.Serialize(customWriter, jsf.Value);
@@ -61,7 +86,7 @@ namespace Polarize
             JsonFilter jsf,
             List<string> fieldStack)
         {
-            if (null == _customSerializer)
+            if (true)//null == _customSerializer)
             {
                 _customSerializer = CreateSerializer(serializer);
             }
