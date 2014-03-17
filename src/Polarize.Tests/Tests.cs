@@ -61,8 +61,6 @@ namespace Polarize.Tests
         [Test]
         public void A_Jit()
         {
-            var test = string.Join(".", "a.b.c".Split('.').Select(s => s)) + ".test";
-            Console.WriteLine(test);
             var tempLoops = loops;
             TestFilter();
             TestFilter2();
