@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Polarize</id>
-    <version>0.1.3</version>
+    <version>0.2.0</version>
     <title>Polarize</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,6 +18,11 @@
     </summary>
     <releaseNotes>
         Notes:
+
+        Version 0.2.0:
+         - Add Constraints
+         - Support custom contracts
+         - No current support for constraining Multidimensional arrays / Lists of Lists
 
         Version 0.1.3:
          - Update Dependency version
