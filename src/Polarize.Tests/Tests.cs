@@ -131,7 +131,7 @@ namespace Polarize.Tests
             var filterJSON = @"{
                 ""constraints"" : {
                     """" : {
-                        ""limit"": 50,
+                        ""limit"": 5,
                         ""offset"": 0
                     }
                 }
