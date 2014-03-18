@@ -116,6 +116,7 @@ namespace Polarize
                 Binder = serializer.Binder,
                 CheckAdditionalContent = serializer.CheckAdditionalContent,
                 ConstructorHandling = serializer.ConstructorHandling,
+                ContractResolver = serializer.ContractResolver,
                 Context = serializer.Context,
                 Culture = serializer.Culture,
                 DateFormatHandling = serializer.DateFormatHandling,
