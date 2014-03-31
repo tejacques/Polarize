@@ -10,16 +10,16 @@ namespace Polarize.Tests
     {
         public static void Main()
         {
-            var test = new Tests();
+            var benchmark = new Benchmarks();
 
             // Setup
-            test.SetUp();
+            benchmark.SetUp();
 
             // JIT
-            test.A_Jit();
+            benchmark._Jit();
 
             // Real thing
-            test.TestFilterFieldsSpeed();
+            benchmark.BenchmarkFilterFieldsSpeed();
         }
     }
 }

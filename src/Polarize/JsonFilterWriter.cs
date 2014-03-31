@@ -102,6 +102,7 @@ namespace Polarize
                 return false;
             }
 
+            var jsonFieldsLen = _jsonFilter.Fields.Length;
             _fieldStack.Add(name);
 
             if (_writeAllInThisProperty > 0)
@@ -110,10 +111,10 @@ namespace Polarize
                 return true;
             }
 
-            var fieldPath = GetFieldPath();
+            string fieldPath = string.Empty;
 
-            if(fieldPath.Length == 0
-                || _jsonFilter.Fields.Length == 0)
+            if (0 == jsonFieldsLen
+                || 0 == (fieldPath = GetFieldPath()).Length)
             {
                 // Root level
                 _shouldWrite = true;
@@ -250,9 +251,14 @@ namespace Polarize
             if (ShouldWriteEndArray())
             {
                 _writer.WriteEndArray();
-                _arrayStack.RemoveAt(_arrayStack.Count - 1);
+                PopArrayStack();
                 PopFieldStack();
             }
+        }
+
+        private void PopArrayStack()
+        {
+            _arrayStack.RemoveAt(_arrayStack.Count - 1);
         }
 
         public override void WriteEndConstructor()

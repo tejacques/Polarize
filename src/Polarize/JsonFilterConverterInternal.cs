@@ -55,10 +55,11 @@ namespace Polarize
             object value,
             JsonSerializer serializer)
         {
-            var fieldPath = GetContainerPath();
+            var jsonFieldsLen = _jsonFilter.Fields.Length;
+            string fieldPath = string.Empty;
 
-            if (fieldPath.Length == 0
-                || _jsonFilter.Fields.Length == 0)
+            if (0 == jsonFieldsLen
+                || 0 == (fieldPath = GetContainerPath()).Length)
             {
                 // Serialize this object but continue checking
                 var toSerialize = ToSerialize(fieldPath, value);
@@ -87,7 +88,6 @@ namespace Polarize
                     ToSerialize(fieldPath, value));
 
                 // The writer will pop for us
-                //PopFieldStack();
             }
             else
             {
@@ -121,10 +121,14 @@ namespace Polarize
                 return value;
             }
 
-            return ToSeriazeInner(value, constraint);
+            return ToSeriazeInner(
+                value, constraint, fieldPath);
         }
 
-        private object ToSeriazeInner(object value, JsonConstraint constraint)
+        private object ToSeriazeInner(
+            object value,
+            JsonConstraint constraint,
+            string fieldPath)
         {
             var contract = _serializer
                 .ContractResolver

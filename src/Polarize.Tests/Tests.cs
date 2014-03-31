@@ -14,7 +14,6 @@ namespace Polarize.Tests
     public class Tests
     {
         Dictionary<string, Dictionary<string, int>> testDictionary;
-        int loops = 10000;
         List<object> l;
 
         [TestFixtureSetUp]
@@ -59,21 +58,6 @@ namespace Polarize.Tests
         }
 
         [Test]
-        public void A_Jit()
-        {
-            var tempLoops = loops;
-            TestFilter();
-            TestFilter2();
-            TestFilter3();
-            loops = 1;
-            TestFilterSpeed();
-            TestFilterFieldsSpeed();
-            TestFilterListWithLimitSpeed();
-            TestSerializeListSpeed();
-            loops = tempLoops;
-        }
-
-        [Test]
         public void TestFilter()
         {
             JsonFilter<Dictionary<string, Dictionary<string, int>>> filter = testDictionary;
@@ -85,16 +69,6 @@ namespace Polarize.Tests
         }
 
         [Test]
-        public void TestFilterSpeed()
-        {
-            JsonFilter<Dictionary<string, Dictionary<string, int>>> filter = testDictionary;
-            for(int i = 0; i < loops; i++)
-            {
-                var json = JsonConvert.SerializeObject(filter);
-            }
-        }
-
-        [Test]
         public void TestFilterFields()
         {
             JsonFilter<Dictionary<string, Dictionary<string, int>>> filter =
@@ -103,50 +77,6 @@ namespace Polarize.Tests
             var json = JsonConvert.SerializeObject(filter);
             var expected = "{\"A\":{\"a\":1,\"b\":2,\"c\":3},\"B\":{\"i\":1},\"C\":{\"z\":3}}";
             Assert.AreEqual(expected, json);
-        }
-
-        [Test]
-        public void TestFilterFieldsSpeed()
-        {
-            JsonFilter<Dictionary<string, Dictionary<string, int>>> filter =
-                JsonFilter.Create(testDictionary, "A", "B.i", "C.z");
-            for (int i = 0; i < loops; i++)
-            {
-                var json = JsonConvert.SerializeObject(filter);
-            }
-        }
-
-        [Test]
-        public void TestSerializeListSpeed()
-        {
-            for (int i = 0; i < loops; i++)
-            {
-                var json = JsonConvert.SerializeObject(l);
-            }
-        }
-
-        [Test]
-        public void TestFilterListWithLimitSpeed()
-        {
-            var filterJSON = @"{
-                ""constraints"" : {
-                    """" : {
-                        ""limit"": 5,
-                        ""offset"": 0
-                    }
-                }
-            }";
-
-            var filterIN = JsonConvert
-                .DeserializeObject<JsonFilter>(filterJSON);
-
-            var filter = JsonFilter.Create(l, filterIN);
-
-            for (int i = 0; i < loops; i++)
-            {
-                var json = JsonConvert.SerializeObject(filter);
-                var x = json;
-            }
         }
 
         [Test]
