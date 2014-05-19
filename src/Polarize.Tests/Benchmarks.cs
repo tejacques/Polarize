@@ -14,7 +14,7 @@ namespace Polarize.Tests
     public class Benchmarks
     {
         Dictionary<string, Dictionary<string, int>> testDictionary;
-        int loops = 10000;
+        int loops = 100000;
         List<object> l;
 
         [TestFixtureSetUp]
@@ -69,6 +69,7 @@ namespace Polarize.Tests
             BenchmarkFilterListWithLimitSpeed();
             BenchmarkSerializeListSpeed();
             BenchmarkSerializeListWithLimitSpeed();
+            BenchmarkCreateFilter();
             loops = tempLoops;
         }
 
@@ -142,6 +143,28 @@ namespace Polarize.Tests
             {
                 var json = JsonConvert.SerializeObject(filter);
                 var x = json;
+            }
+        }
+
+        [Test]
+        public void BenchmarkCreateFilter()
+        {
+            for (int i = 0; i < loops; i++)
+            {
+                var filterJSON = @"
+                {
+                    ""constraints"" : {
+                        """" : {
+                            ""limit"": 5,
+                            ""offset"": 0
+                        }
+                    }
+                }";
+
+                var filterIN = JsonConvert
+                    .DeserializeObject<JsonFilter>(filterJSON);
+
+                var filter = JsonFilter.Create(l, filterIN);
             }
         }
     }
