@@ -320,6 +320,39 @@ namespace Polarize.Tests
             TestContraintsHelper(expected, filterJSON);
         }
 
+        /// <summary>
+        /// Test to make sure we get two things back
+        /// </summary>
+        [Test]
+        public void TestConstraints4()
+        {
+            var expected = "["
+                +"{"
+                    + "\"A\":\"1\","
+                    + "\"C\":\"3\""
+                + "},"
+                + "{"
+                    + "\"A\":\"1\","
+                    + "\"C\":\"3\""
+                + "}"
+            +"]";
+
+            var filterJSON = @"{
+                ""fields"" : [
+                    ""A"",
+                    ""C""
+                ],
+                ""constraints"" : {
+                    """" : {
+                        ""limit"": 2,
+                        ""offset"": 1
+                    }
+                }
+            }";
+
+            TestContraintsHelper(expected, filterJSON);
+        }
+
         private static void TestContraintsHelper(string expected, string filterJSON)
         {
             var dict = new Dictionary<string, string>()
