@@ -55,6 +55,7 @@ namespace Polarize
             object value,
             JsonSerializer serializer)
         {
+            
             var jsonFieldsLen = _jsonFilter.Fields.Length;
             string fieldPath = string.Empty;
 
@@ -62,7 +63,7 @@ namespace Polarize
                 || 0 == (fieldPath = GetContainerPath()).Length)
             {
                 // Serialize this object but continue checking
-                var toSerialize = ToSerialize(fieldPath, value);
+                var toSerialize = ToSerialize(fieldPath, value, writer);
                 serializer.Serialize(
                     writer,
                     toSerialize);
@@ -72,9 +73,10 @@ namespace Polarize
                 // Serialize Everything
                 _serializer.Serialize(
                     _writer,
-                    ToSerialize(fieldPath, value));
+                    ToSerialize(fieldPath, value, writer));
 
-                ((JsonFilterWriter)writer).WriteAllInThisProperty = false;
+                var jfWriter = (JsonFilterWriter)writer;
+                jfWriter.WriteAllInThisProperty = false;
                 PopFieldStack();
 
                 // Intercept the next call
@@ -85,7 +87,7 @@ namespace Polarize
                 // Serialize this object but continue checking
                 serializer.Serialize(
                     writer,
-                    ToSerialize(fieldPath, value));
+                    ToSerialize(fieldPath, value, writer));
 
                 // The writer will pop for us
             }
@@ -110,7 +112,8 @@ namespace Polarize
 
         private object ToSerialize(
             string fieldPath,
-            object value)
+            object value,
+            JsonWriter writer)
         {
             JsonConstraint constraint;
             if (null == _jsonFilter.Constraints
@@ -122,13 +125,20 @@ namespace Polarize
             }
 
             return ToSeriazeInner(
-                value, constraint, fieldPath);
+                value, constraint, fieldPath, writer);
         }
+
+        private static JsonConstraint _noConstraint = new JsonConstraint()
+        {
+            Limit = -1,
+            Offset = 0
+        };
 
         private object ToSeriazeInner(
             object value,
             JsonConstraint constraint,
-            string fieldPath)
+            string fieldPath,
+            JsonWriter writer)
         {
             var contract = _serializer
                 .ContractResolver
@@ -148,11 +158,19 @@ namespace Polarize
             // Remove the constraint so we don't use it in the writer
             // That's a lie we have to still use it, but it fucks up on
             // lists of lists
+            
             //_jsonFilter.Constraints.Remove(fieldPath);
 
             var constrained = ((IEnumerable)value).Cast<object>()
                 .Skip(constraint.Offset)
                 .Take(constraint.Limit);
+
+            var jsonFilterWriter = writer as JsonFilterWriter;
+
+            if (null != jsonFilterWriter)
+            {
+                jsonFilterWriter.NextConstraint = _noConstraint;
+            }
 
             return constrained;
         }

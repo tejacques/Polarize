@@ -247,5 +247,104 @@ namespace Polarize.Tests
             Assert.AreEqual(expected, json);
 
         }
+
+        /// <summary>
+        /// Test to make sure we only get one thing back
+        /// </summary>
+        [Test]
+        public void TestConstraints()
+        {
+            var expected = "[{"
+                    + "\"A\":\"1\","
+                    + "\"B\":\"2\","
+                    + "\"C\":\"3\""
+                + "}]";
+
+            var filterJSON = @"{
+                ""constraints"" : {
+                    """" : {
+                        ""limit"": 1,
+                        ""offset"": 9
+                    }
+                }
+            }";
+
+            TestContraintsHelper(expected, filterJSON);
+        }
+
+        /// <summary>
+        /// Test to make sure we only get one thing back
+        /// </summary>
+        [Test]
+        public void TestConstraints2()
+        {
+            var expected = "[{"
+                    + "\"A\":\"1\","
+                    + "\"B\":\"2\","
+                    + "\"C\":\"3\""
+                + "}]";
+
+            var filterJSON = @"{
+                ""constraints"" : {
+                    """" : {
+                        ""limit"": 1,
+                        ""offset"": 9
+                    }
+                }
+            }";
+
+            TestContraintsHelper(expected, filterJSON);
+        }
+
+        /// <summary>
+        /// Test to make sure we only get one thing back
+        /// </summary>
+        [Test]
+        public void TestConstraints3()
+        {
+            var expected = "[{"
+                    + "\"A\":\"1\","
+                    + "\"B\":\"2\","
+                    + "\"C\":\"3\""
+                + "}]";
+
+            var filterJSON = @"{
+                ""constraints"" : {
+                    """" : {
+                        ""limit"": 10,
+                        ""offset"": 9
+                    }
+                }
+            }";
+
+            TestContraintsHelper(expected, filterJSON);
+        }
+
+        private static void TestContraintsHelper(string expected, string filterJSON)
+        {
+            var dict = new Dictionary<string, string>()
+            {
+                { "A", "1"},
+                { "B", "2"},
+                { "C", "3"},
+            };
+
+            var list = new List<Dictionary<string, string>>(10);
+
+            for (int i = 0; i < 10; i++)
+            {
+                list.Add(dict);
+            }
+
+
+
+            var filterIN = JsonConvert
+                .DeserializeObject<JsonFilter>(filterJSON);
+
+            var filter = JsonFilter.Create(list, filterIN);
+
+            var json = JsonConvert.SerializeObject(filter);
+            Assert.AreEqual(expected, json);
+        }
     }
 }

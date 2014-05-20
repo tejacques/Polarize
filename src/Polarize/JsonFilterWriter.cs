@@ -14,13 +14,23 @@ namespace Polarize
         public int Offset;
         public bool ShouldWrite;
 
-        public WriterState(
-            Dictionary<string, JsonConstraint> constraints,
-            string fieldPath)
+        public WriterState()
         {
             Count = 0;
             ShouldWrite = true;
+        }
 
+        public WriterState(JsonConstraint constraint) : this()
+        {
+            Limit = constraint.Limit;
+            Offset = constraint.Offset;
+        }
+
+        public WriterState(
+            Dictionary<string, JsonConstraint> constraints,
+            string fieldPath)
+            : this()
+        {
             JsonConstraint constraint;
             if (null != constraints
                 && constraints.TryGetValue(
@@ -73,6 +83,8 @@ namespace Polarize
                 return _writer;
             }
         }
+
+        public JsonConstraint NextConstraint { get; set; }
 
         public JsonFilterWriter(
             JsonWriter writer,
@@ -346,9 +358,20 @@ namespace Polarize
         {
             if (ShouldWriteStart())
             {
-                _arrayStack.Add(new WriterState(
-                    _jsonFilter.Constraints,
-                    GetFieldPath()));
+                WriterState state;
+                if (null != NextConstraint)
+                {
+                    state = new WriterState(NextConstraint);
+                    NextConstraint = null;
+                }
+                else
+                {
+                    state = new WriterState(
+                        _jsonFilter.Constraints,
+                        GetFieldPath());
+                }
+
+                _arrayStack.Add(state);
                 _writer.WriteStartArray();
             }
         }
@@ -480,342 +503,342 @@ namespace Polarize
 
         public override void WriteValue(bool value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(bool? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(byte value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(byte? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(byte[] value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(char value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(char? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(DateTime value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(DateTime? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(DateTimeOffset value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(DateTimeOffset? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(decimal value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(decimal? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(double value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(double? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(float value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(float? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(Guid value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(Guid? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(int value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(int? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(long value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(long? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(object value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(sbyte value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(sbyte? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(short value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(short? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(string value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(TimeSpan value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(TimeSpan? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(uint value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(uint? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(ulong value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(ulong? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(Uri value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(ushort value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }
 
         public override void WriteValue(ushort? value)
         {
+            PopFieldStackWriteValue();
             if (ShouldWrite)
             {
-                PopFieldStackWriteValue();
                 _writer.WriteValue(value);
             }
         }

@@ -14,7 +14,7 @@ namespace Polarize.Tests
     public class Benchmarks
     {
         Dictionary<string, Dictionary<string, int>> testDictionary;
-        int loops = 100000;
+        int loops = 10000;
         List<object> l;
 
         [TestFixtureSetUp]
