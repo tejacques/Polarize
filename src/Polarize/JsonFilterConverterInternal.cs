@@ -57,7 +57,7 @@ namespace Polarize
         {
             
             var jsonFieldsLen = _jsonFilter.Fields.Length;
-            string fieldPath = string.Empty;
+            string fieldPath = GetContainerPath();
 
             if (0 == jsonFieldsLen
                 || 0 == (fieldPath = GetContainerPath()).Length)

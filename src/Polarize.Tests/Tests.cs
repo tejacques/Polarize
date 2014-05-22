@@ -379,5 +379,53 @@ namespace Polarize.Tests
             var json = JsonConvert.SerializeObject(filter);
             Assert.AreEqual(expected, json);
         }
+
+        [Test]
+        public void TestConstraints5()
+        {
+            var expected = "{"
+                + "\"Items\":["
+                + "{"
+                    + "\"A\":\"1\""
+                + "},"
+                + "{"
+                    + "\"A\":\"1\""
+                + "}"
+            + "]}";
+
+            var filterJSON = @"{
+                ""constraints"" : {
+                    ""Items"" : {
+                        ""limit"": 2,
+                        ""offset"": 1
+                    }
+                }
+            }";
+
+            var dict = new Dictionary<string, string>()
+            {
+                { "A", "1"},
+            };
+
+            var list = new List<Dictionary<string, string>>(10);
+
+            for (int i = 0; i < 4; i++)
+            {
+                list.Add(dict);
+            }
+
+            var obj = new
+            {
+                Items = list
+            };
+
+            var filterIN = JsonConvert
+                .DeserializeObject<JsonFilter>(filterJSON);
+
+            var filter = JsonFilter.Create(obj, filterIN);
+
+            var json = JsonConvert.SerializeObject(filter);
+            Assert.AreEqual(expected, json);
+        }
     }
 }

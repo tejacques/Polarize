@@ -125,8 +125,12 @@ namespace Polarize
 
             string fieldPath = string.Empty;
 
-            if (0 == jsonFieldsLen
-                || 0 == (fieldPath = GetFieldPath()).Length)
+            if (0 == jsonFieldsLen)
+            {
+                // Nothing is filtered
+                _shouldWrite = true;
+            }
+            else if (0 == (fieldPath = GetFieldPath()).Length)
             {
                 // Root level
                 _shouldWrite = true;
@@ -419,6 +423,7 @@ namespace Polarize
 
                 if (WriteState.Array == _writer.WriteState)
                 {
+
                     var state = _arrayStack.Last();
 
                     if (!state.ShouldWrite)

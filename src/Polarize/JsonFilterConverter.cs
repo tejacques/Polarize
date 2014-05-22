@@ -10,7 +10,7 @@ namespace Polarize
 {
     public class JsonFilterConverter : JsonConverter
     {
-        private static JsonSerializer _customSerializer;
+        //private static JsonSerializer _customSerializer;
         public override bool CanConvert(Type objectType)
         {
             return typeof(JsonFilter).IsAssignableFrom(objectType);
@@ -86,26 +86,29 @@ namespace Polarize
             JsonFilter jsf,
             List<string> fieldStack)
         {
-            if (true)//null == _customSerializer)
-            {
-                _customSerializer = CreateSerializer(serializer);
-            }
+            //if (true)//null == _customSerializer)
+            //{
+            //    _customSerializer = CreateSerializer(serializer);
+            //}
+            var customSerializer = CreateSerializer(serializer);
 
-            SetConverter(customConverter);
+            SetConverter(customSerializer, customConverter);
 
-            return _customSerializer;
+            return customSerializer;
         }
 
-        private static void SetConverter(JsonFilterConverterInternal customConverter)
+        private static void SetConverter(
+            JsonSerializer customSerializer,
+            JsonFilterConverterInternal customConverter)
         {
-            if (_customSerializer.Converters.Count > 0
-                && _customSerializer.Converters[0] is JsonFilterConverterInternal)
+            if (customSerializer.Converters.Count > 0
+                && customSerializer.Converters[0] is JsonFilterConverterInternal)
             {
-                _customSerializer.Converters[0] = customConverter;
+                customSerializer.Converters[0] = customConverter;
             }
             else
             {
-                _customSerializer.Converters.Insert(0, customConverter);
+                customSerializer.Converters.Insert(0, customConverter);
             }
         }
 
