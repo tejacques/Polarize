@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Polarize</id>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
     <title>Polarize</title>
     <authors>Tom Jacques</authors>
     <owners>Tom Jacques</owners>
@@ -18,6 +18,9 @@
     </summary>
     <releaseNotes>
         Notes:
+
+        Version 0.2.3:
+         - Bugfix Issue #7: An issue causing constraints to not be applied was resolved
 
         Version 0.2.2:
          - Bugfix Issue #5: Constraints now work correctly
