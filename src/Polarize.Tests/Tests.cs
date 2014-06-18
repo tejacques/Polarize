@@ -69,17 +69,6 @@ namespace Polarize.Tests
         }
 
         [Test]
-        public void TestFilterFields()
-        {
-            JsonFilter<Dictionary<string, Dictionary<string, int>>> filter =
-                JsonFilter.Create(testDictionary, "A", "B.i", "C.z");
-
-            var json = JsonConvert.SerializeObject(filter);
-            var expected = "{\"A\":{\"a\":1,\"b\":2,\"c\":3},\"B\":{\"i\":1},\"C\":{\"z\":3}}";
-            Assert.AreEqual(expected, json);
-        }
-
-        [Test]
         public void TestFilter2()
         {
             var expected = "{\"b\":\"test2\"}";
@@ -154,6 +143,28 @@ namespace Polarize.Tests
             var json = JsonConvert.SerializeObject(filter);
             Assert.AreEqual(expected, json);
 
+        }
+
+        [Test]
+        public void TestFilterFields()
+        {
+            JsonFilter<Dictionary<string, Dictionary<string, int>>> filter =
+                JsonFilter.Create(testDictionary, "A", "B.i", "C.z");
+
+            var json = JsonConvert.SerializeObject(filter);
+            var expected = "{\"A\":{\"a\":1,\"b\":2,\"c\":3},\"B\":{\"i\":1},\"C\":{\"z\":3}}";
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void TestFilterFields2()
+        {
+            JsonFilter<Dictionary<string, Dictionary<string, int>>> filter =
+                JsonFilter.Create(testDictionary, "D");
+
+            var json = JsonConvert.SerializeObject(filter);
+            var expected = "{}";
+            Assert.AreEqual(expected, json);
         }
 
         internal class CustomConverter : JsonConverter
@@ -426,6 +437,65 @@ namespace Polarize.Tests
 
             var json = JsonConvert.SerializeObject(filter);
             Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void TestFilterCustomSerializerConstraints()
+        {
+
+            var expected = "{"
+                + "\"objects\":[{"
+                    + "\"first\":\"The\","
+                    + "\"third\":\"Hulk\""
+                + "}]"
+            + "}";
+
+            var filterJSON = @"{
+                ""fields"" : [
+                    ""objects.first"",
+                    ""objects.third"",
+                ],
+                ""constraints"" : {
+                    ""objects"" : {
+                        ""limit"": 1,
+                        ""offset"": 1
+                    }
+                }
+            }";
+
+            var filterIN = JsonConvert
+                .DeserializeObject<JsonFilter>(filterJSON);
+
+            var filter = JsonFilter.Create(
+                (object)(new
+                {
+                    objects = new[]
+                    {
+                        new CustomConverterObject
+                        {
+                            first = "The",
+                            second = "Amazing",
+                            third = "Spiderman"
+                        },
+                        new CustomConverterObject
+                        {
+                            first = "The",
+                            second = "Incredible",
+                            third = "Hulk"
+                        },
+                        new CustomConverterObject
+                        {
+                            first = "The",
+                            second = "Immovable",
+                            third = "Object"
+                        },
+                    }
+                }),
+                filterIN);
+
+            var json = JsonConvert.SerializeObject(filter);
+            Assert.AreEqual(expected, json);
+
         }
     }
 }
